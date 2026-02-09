@@ -2,6 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(plotly)
 library(fresh)
+library(bslib)
 
 # Set some colors for the app
 my_theme <- create_theme(
@@ -14,6 +15,7 @@ my_theme <- create_theme(
     purple = "#A2AADB"
   )
 )
+
 
 ui <- dashboardPage(
   dashboardHeader(title = "Student Stress Analysis"),
@@ -37,6 +39,40 @@ ui <- dashboardPage(
     )),
   dashboardBody(
     use_theme(my_theme),
+    # Pre-set format
+    tags$head(
+      tags$style(HTML("
+    /* Target BOTH old box titles and new card headers */
+    .box-title, .card-header {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      font-weight: 800 !important; /* Extra bold */
+      text-align: center !important;
+      color: #434E78 !important;
+      width: 100%;
+      font-family: 'Verdana', sans-serif !important;
+    }
+    .small-box {
+      background-color: #C5D89D !important;
+      color: white !important;} /* Sets text color to your dark blue for contrast */
+    
+    .nav-tabs-custom > .nav-tabs > li > a {
+      font-family: 'Verdana', sans-serif;
+      font-size: 15px;
+      color: #434E78;
+      font-weight: 600;
+    }
+
+    .nav-tabs-custom > .nav-tabs > li.active > a {
+      color: #A2AADB;
+    }
+}
+  "))
+    )
+    
+    ,
+    
     tabItems(
       tabItem(tabName = "overall",
               fluidRow(
@@ -47,15 +83,26 @@ ui <- dashboardPage(
                 
               ),
               fluidRow(
-                box(width = 3, plotOutput("p_1_4", height = "250px")),
-                box(width = 3, plotOutput("p_1_2", height = "250px")),
-                box(width = 3, plotOutput("p_1_3", height = "250px")),
-                box(width = 3, plotOutput("p_1_1", height = "250px"))
+                box(title = "Number of student per cluster",
+                    width = 3, 
+                    plotOutput("p_1_1", height = "250px")),
+                box(title = "Bullying among participants",
+                    width = 3, 
+                    plotOutput("p_1_2", height = "250px")),
+                box(title = "Sleep Quality among participants", 
+                    width = 3, 
+                    plotOutput("p_1_3", height = "250px")),
+                box(title = "Academic Performace",
+                    width = 3, 
+                    plotOutput("p_1_4", height = "250px"))
               ),
               fluidRow(
-                box(width = 4, plotlyOutput("b_1_1", height = "350px")),
-                box(width = 4, plotlyOutput("b_1_2", height = "350px")),
-                box(width = 4, plotlyOutput("b_1_3", height = "350px"))
+                box(width = 4, plotlyOutput("b_1_1", height = "350px"),
+                    title = "Depression Level by Participants"),
+                box(width = 4, plotlyOutput("b_1_2", height = "350px"),
+                    title = "Stress Level Among participants"),
+                box(width = 4, plotlyOutput("b_1_3", height = "350px"),
+                    title = "Basic Need Effects on Stress Level")
                 
               ),
               hr(),
@@ -69,8 +116,9 @@ ui <- dashboardPage(
               )),
       tabItem(tabName = "health",
               fluidRow(
-                valueBoxOutput("pct_ax_less_21", width =2),
-                valueBoxOutput("pct_MHP", width=2))),
+                valueBoxOutput("pct_ax_less_21", width =4),
+                valueBoxOutput("pct_MHP", width=4),
+                valueBoxOutput("poor_sleep", width=4))),
       tabItem(tabName = "academic",
               fluidRow(
                 valueBoxOutput("academic_standing_box", width = 4),
@@ -78,16 +126,54 @@ ui <- dashboardPage(
                 valueBoxOutput("teaStuRel_box", width = 4)
               ),
               fluidRow(
-                box(width = 6, plotlyOutput("b_2_1"), height = "300px"),
-                box(width = 6, plotlyOutput("b_2_2"), height = "300px"),
+                box(width = 6, plotlyOutput("b_2_1"), height = "300px",
+                    title = "Extracurricular Activities' impacts on Academic"),
+                box(width = 6, plotlyOutput("b_2_2"), height = "300px",
+                    title = "Study Load' impacts on Academic"),
                 
               ),
               fluidRow(
-                box(width = 4, plotlyOutput("b_2_3"), height = "400px"),
-                box(width = 8, plotlyOutput("box_2_4"), height = "400px")
+                box(width = 5, plotlyOutput("b_2_3"), height = "420px",
+                    title = "How relationships with teachers stress students?"),
+                box(width = 7, plotlyOutput("box_2_4"), height = "420px",
+                    title = "Depression Score by Study Load")
               )),
       tabItem(tabName = "social_envir",
-              fluidRow()),
+              fluidRow(
+                valueBoxOutput("pct_bullied", width = 4),
+                valueBoxOutput("bad_condition", width = 4),
+                valueBoxOutput("low_safety", width = 4)
+              ),
+              fluidRow(
+                box(title = "How bullied students get social support?",
+                    plotlyOutput("b_4_1"),
+                    height = "400px",
+                    width = 5),
+                tabBox(
+                  title = "",
+                  id = "tabset1",
+                  width = 7, # This controls the outer size on the screen
+                  tabPanel("Living Condition vs. Stress", 
+                           solidHeader = T,
+                           fluidRow(
+                             column(
+                               width = 12,
+                               box(title = "How living condition correlates with stress level",
+                                   width = 12, 
+                                   plotlyOutput("b_4_2"))
+                             ))),
+                  tabPanel("Noise vs. Stress", 
+                           solidHeader = T,
+                           fluidRow(
+                             column(
+                               width = 12,
+                               box(title = "How noise levels correlates with stress level",
+                                   width = 12, 
+                                   plotlyOutput("b_4_3"))
+                             )))
+                           )
+                
+              )),
       tabItem(tabName="raw",
               fluidRow()
       
