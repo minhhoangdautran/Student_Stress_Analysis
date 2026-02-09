@@ -14,8 +14,7 @@ shinyServer(function(input, output){
         badge_status <- reactiveValues(
           academic = TRUE, 
           social_envir  = TRUE, 
-          health   = TRUE,
-          raw = TRUE
+          health   = TRUE
         )
     # Watch the sidebar ID
         observeEvent(input$menu_selection, {
@@ -28,8 +27,7 @@ shinyServer(function(input, output){
         tabs_config <- list(
           academic = list(label = "Academic", icon = "school"),
           health   = list(label = "Health",   icon = "heart-pulse"),
-          social_envir   = list(label = "Social & Environmental",   icon = "bluesky"),
-          raw   = list(label = "Raw Data",   icon = "table")
+          social_envir   = list(label = "Social & Environmental",   icon = "bluesky")
         )
         
         # Render menu output
@@ -349,6 +347,178 @@ shinyServer(function(input, output){
     })
     output$poor_sleep <- renderValueBox({
       valueBox(value = scales::percent(nrow(filtered_df()[filtered_df()$PoorSleepQuality == "Poor",])/nrow(filtered_df()), accuracy = 0.1), subtitle = "Students have poor sleep quality", icon = icon("bed"))
+    })
+    
+    output$b_3_1 <- renderPlotly({
+      # Group by two variables (relationship and stress level)
+      data_b31 <- filtered_df() %>%
+        count(depression, mental_health_history) %>%
+        rename(cluster =  depression, group = mental_health_history, count = n)
+      
+      plot_ly(data_b31, 
+              x = ~cluster, 
+              y = ~count,
+              color = ~as.factor(group), # creates the 'stacks'
+              colors = c(purple, yellow),
+              type = 'bar',
+              height = 350) %>%
+        layout(
+          margin = list(t=0),
+          barmode = 'stack', 
+          legend = list(title = list(text = "<b>Mental health<br>problem history?</b>"),
+                        font = list(size=10, color = blue),
+                        x = 0.8,
+                        xanchor = "left",
+                        y = 1,
+                        yanchor = "top"),
+          xaxis = list(title = "Depression Level", dtick =1),
+          yaxis = list(
+            title = "Count"
+          )
+        )
+    })
+    output$b_3_2 <- renderPlotly({
+      # Group by two variables (sleep and stress)
+      data_b32 <- filtered_df() %>%
+        count(PoorSleepQuality, stress_level) %>%
+        rename(cluster = PoorSleepQuality , group = stress_level, count = n) %>%
+        group_by(cluster) %>%
+        mutate(
+          percent = count/sum(count) *100
+        ) %>%
+        ungroup()
+      
+      plot_ly(data_b32, 
+              y = ~cluster, 
+              x = ~percent,
+              orientation = "h",
+              color = ~as.factor(group), # creates the 'stacks'
+              colors = c(purple, yellow, orange),
+              type = 'bar',
+              height = 350) %>%
+        layout(
+          # margin = list(t=60),
+          barmode = 'stack', 
+          title = NULL,
+          legend = list(title = list(text = "<b>Stress level</b>")),
+          yaxis = list(title = "Sleep Quality"),
+          xaxis = list(
+            title = "Percentage",
+            ticksuffix = "%",
+            range = c(0, 100)
+          )
+        )
+    })
+    output$b_3_3 <- renderPlotly({
+      plot_ly(
+        data = filtered_df(),
+        x = ~depression,
+        y = ~self_esteem,
+        type = "scatter",
+        mode = "markers",
+        marker = list(size = 10, color = green)
+      ) %>%
+        layout(
+          xaxis = list(title = "Depression Level"),
+          yaxis = list(title = "Self-esteem level")
+        )
+    })
+    
+    output$b_3_4 <- renderPlotly({# Group by two variables (performance and activities)
+      data_b34 <- filtered_df() %>%
+        count(blood_pressure, stress_level) %>%
+        rename(cluster = blood_pressure , group = stress_level, count = n) %>%
+        group_by(cluster) %>%
+        mutate(
+          percent = count/sum(count) *100
+        ) %>%
+        ungroup()
+      
+      plot_ly(data_b34, 
+              x = ~cluster, 
+              y = ~percent,
+              color = ~as.factor(group), # creates the 'stacks'
+              colors = c(purple, yellow, orange),
+              type = 'bar',
+              height = 300) %>%
+        layout(
+          # margin = list(t=60),
+          barmode = 'stack', 
+          bargap = 0.5,
+          title = NULL,
+          legend = list(title = list(text = "<b>Stress lvel</b>"),
+                        font = list(color=blue)),
+          xaxis = list(title="<b>Blood Pressure level</b>",dtick =1),
+          yaxis = list(
+            title = "Percentage",
+            ticksuffix = "%",
+            range = c(0, 100)
+          )
+        )
+    })
+    output$b_3_5 <- renderPlotly({# Group by two variables (performance and activities)
+      data_b35 <- filtered_df() %>%
+        count(breathing_problem, stress_level) %>%
+        rename(cluster = breathing_problem , group = stress_level, count = n) %>%
+        group_by(cluster) %>%
+        mutate(
+          percent = count/sum(count) *100
+        ) %>%
+        ungroup()
+      
+      plot_ly(data_b35, 
+              x = ~cluster, 
+              y = ~percent,
+              color = ~as.factor(group), # creates the 'stacks'
+              colors = c(purple, yellow, orange),
+              type = 'bar',
+              height = 300) %>%
+        layout(
+          # margin = list(t=60),
+          barmode = 'stack', 
+          bargap = 0.5,
+          title = NULL,
+          legend = list(title = list(text = "<b>Stress lvel</b>"),
+                        font = list(color=blue)),
+          xaxis = list(title="<b>Breathing (no problem at 0)</b>",dtick =1),
+          yaxis = list(
+            title = "Percentage",
+            ticksuffix = "%",
+            range = c(0, 100)
+          )
+        )
+    })
+    output$b_3_6 <- renderPlotly({# Group by two variables (performance and activities)
+      data_b36 <- filtered_df() %>%
+        count(headache, stress_level) %>%
+        rename(cluster = headache , group = stress_level, count = n) %>%
+        group_by(cluster) %>%
+        mutate(
+          percent = count/sum(count) *100
+        ) %>%
+        ungroup()
+      
+      plot_ly(data_b36, 
+              x = ~cluster, 
+              y = ~percent,
+              color = ~as.factor(group), # creates the 'stacks'
+              colors = c(purple, yellow, orange),
+              type = 'bar',
+              height = 300) %>%
+        layout(
+          # margin = list(t=60),
+          barmode = 'stack', 
+          bargap = 0.5,
+          title = NULL,
+          legend = list(title = list(text = "<b>Stress lvel</b>"),
+                        font = list(color=blue)),
+          xaxis = list(title="<b>Headache (no problem at 0)</b>",dtick =1),
+          yaxis = list(
+            title = "Percentage",
+            ticksuffix = "%",
+            range = c(0, 100)
+          )
+        )
     })
     
   # --- Output for tab 4: social & environment

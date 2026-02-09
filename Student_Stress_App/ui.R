@@ -118,7 +118,54 @@ ui <- dashboardPage(
               fluidRow(
                 valueBoxOutput("pct_ax_less_21", width =4),
                 valueBoxOutput("pct_MHP", width=4),
-                valueBoxOutput("poor_sleep", width=4))),
+                valueBoxOutput("poor_sleep", width=4)),
+              fluidRow(
+                box(plotlyOutput("b_3_1"), width = 6, height = "450px",
+                    title = "How past mental problem relates to depression level?"
+                    ),
+                box(plotlyOutput("b_3_2"), width = 6, height = "450px",
+                    title = "How sleep quality relates to stress level?")
+              ),
+              fluidRow(
+                box(plotlyOutput("b_3_3"), width = 6, height = "480px",
+                    title = "Correlation between self-esteem and depression level"),
+                tabBox(
+                  title = "",
+                  id = "tabset2",
+                  width = 6, # This controls the outer size on the screen
+                  tabPanel("Blood Pressure vs. Stress",
+                           status = "primary",
+                           solidHeader = T,
+                           fluidRow(
+                             column(
+                               width = 12,
+                               box(title = "Blood Pressure vs. Stress",
+                                   width = 12,
+                                   height = "350px",
+                                   plotlyOutput("b_3_4"))
+                             ))),
+                  tabPanel("Breathing vs. Stress", 
+                           solidHeader = T,
+                           fluidRow(
+                             column(
+                               width = 12,
+                               box(title = "Breathing problems relate to stress level?",
+                                   width = 12, 
+                                   height = "350px",
+                                   plotlyOutput("b_3_5"))
+                             ))),
+                  tabPanel("Headache vs. Stress", 
+                           solidHeader = T,
+                           fluidRow(
+                             column(
+                               width = 12,
+                               box(title = "Headache relates to stress level?",
+                                   width = 12, 
+                                   height = "350px",
+                                   plotlyOutput("b_3_6"))
+                             )))
+                )
+              )),
       tabItem(tabName = "academic",
               fluidRow(
                 valueBoxOutput("academic_standing_box", width = 4),
@@ -129,7 +176,7 @@ ui <- dashboardPage(
                 box(width = 6, plotlyOutput("b_2_1"), height = "300px",
                     title = "Extracurricular Activities' impacts on Academic"),
                 box(width = 6, plotlyOutput("b_2_2"), height = "300px",
-                    title = "Study Load' impacts on Academic"),
+                    title = "Study Load' impacts on Academic")
                 
               ),
               fluidRow(
@@ -153,7 +200,8 @@ ui <- dashboardPage(
                   title = "",
                   id = "tabset1",
                   width = 7, # This controls the outer size on the screen
-                  tabPanel("Living Condition vs. Stress", 
+                  tabPanel("Living Condition vs. Stress",
+                           status = "primary",
                            solidHeader = T,
                            fluidRow(
                              column(
@@ -173,11 +221,6 @@ ui <- dashboardPage(
                              )))
                            )
                 
-              )),
-      tabItem(tabName="raw",
-              fluidRow()
-      
+              ))
       )
-      
-    ))
-)
+))
