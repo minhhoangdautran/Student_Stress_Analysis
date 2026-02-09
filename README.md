@@ -33,5 +33,5 @@ Researchers from Tribhuvan University gathered data from 1,100 students across N
 <hr>
 
 <p align="center">
-  [cite_start]<em>"Take care of the youth is take care of the future"</em> [cite: 28]
+  <em>"If having any questions, concerns or feedback, please email <b>mdautran@usc.edu</b>"</em>
 </p>
