@@ -4,7 +4,7 @@
   <strong>An end-to-end data project understanding student stress personas with Machine Learning and Interactive Visualization.</strong>
   <br>
   ⭐<a href="https://p6fch7-minh0hoang-dau0tran.shinyapps.io/Student_Stress_App_final/"><strong>RShiny View App</strong></a> | 
-  📜<a href="https://drive.google.com/file/d/1bp3Cyq3BEgepjY70h_mqFc4TH2KremJX/view/"><strong>Full Analysis PDF</strong></a>
+  📜<a href="https://drive.google.com/file/d/1bp3Cyq3BEgepjY70h_mqFc4TH2KremJX/view"><strong>Full Analysis PDF</strong></a>
 </p>
 
 <hr>
